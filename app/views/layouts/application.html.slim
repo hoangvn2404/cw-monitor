@@ -1,0 +1,27 @@
+doctype html
+html
+  head
+    meta content=("text/html; charset=UTF-8") http-equiv="Content-Type"
+    title CwMonitor
+    meta content="width=device-width,initial-scale=1" name="viewport"
+    = csrf_meta_tags
+    = csp_meta_tag
+    / script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js" 
+    / script charset="utf8" src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.js" type="text/javascript" 
+
+    script src="https://code.jquery.com/jquery-3.5.1.js"
+    script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"
+    script src="https://cdn.datatables.net/1.10.23/js/dataTables.bootstrap4.min.js"
+    script src="https://cdn.datatables.net/fixedheader/3.1.7/js/dataTables.fixedHeader.min.js"
+    
+    link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css" rel="stylesheet" type="text/css"
+    link href="https://cdn.datatables.net/1.10.23/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css"
+    link href="https://cdn.datatables.net/fixedheader/3.1.7/css/fixedHeader.bootstrap4.min.css" rel="stylesheet" type="text/css"
+    = stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload'
+    = javascript_pack_tag 'application', 'data-turbolinks-track': 'reload'
+  body
+    = yield
+
+
+
+

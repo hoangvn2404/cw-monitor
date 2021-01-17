@@ -1,0 +1,36 @@
+p#notice = notice
+
+p
+  strong Link:
+  = @warrant.link
+p
+  strong Conversion:
+  = @warrant.conversion
+p
+  strong Basic price:
+  = @warrant.basic_price
+p
+  strong Stock price:
+  = @warrant.stock_price
+p
+  strong Stock:
+  = @warrant.stock
+p
+  strong Issuer:
+  = @warrant.issuer
+p
+  strong Code:
+  = @warrant.code
+p
+  strong Start date:
+  = @warrant.start_date
+p
+  strong End date:
+  = @warrant.end_date
+p
+  strong Status:
+  = @warrant.status
+
+=> link_to 'Edit', edit_warrant_path(@warrant)
+'|
+=< link_to 'Back', warrants_path
