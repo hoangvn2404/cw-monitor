@@ -20,7 +20,7 @@ gem 'ruby-progressbar'
 gem 'slim-rails'
 gem 'roo'
 gem 'pry' #debugging tool
-gem 'nokogiri' #parsing gem
+gem 'nokogiri'
 gem 'kimurai'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
