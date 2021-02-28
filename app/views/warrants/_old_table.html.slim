@@ -1,0 +1,54 @@
+table#table.table.table-hover.table-sm.table-bordered
+  thead.thead-light
+    tr
+      th data-sortable="true" #
+      th data-sortable="true" Issuer
+      th data-sortable="true" Stock
+      th data-sortable="true" WC
+      th data-sortable="true" Conversion
+      th data-sortable="true" TC
+      th data-sortable="true" C Ask
+      th data-sortable="true" Change
+      th data-sortable="true" X
+      th data-sortable="true" S
+      th data-sortable="true" Need to increase
+      th data-sortable="true" Profit
+      th data-sortable="true" Remaining
+      / th data-sortable="true" Start date
+      th data-sortable="true" End date
+
+  tbody
+    - @warrants.each_with_index do |warrant, index|
+      tr
+        td = index + 1
+        td = warrant.issuer
+        td = warrant.stock
+        td 
+          = link_to warrant.code, warrant.link, target: '_blank'
+          - if current_user.present?
+            .float-right id="warrant_#{warrant.id}"
+              = render 'warrants/toggle', warrant: warrant
+        td.text-right = warrant.conversion
+        td.text-right = number_to_currency(warrant.tham_chieu, precision: 0)
+        td.text-right = number_to_currency(warrant.current_warrant_price, precision: 0)
+        - change = ((warrant.current_warrant_price - warrant.tham_chieu).to_f/warrant.tham_chieu.to_f*100).to_i
+        td.text-right.font-weight-bold class="#{change >= 0 ? 'text-primary' : 'text-danger'}" = number_to_percentage(change, precision: 0)
+        td.text-right = number_to_currency(warrant.basic_stock_price, precision: 0)
+        td.text-right = number_to_currency(warrant.current_stock_price, precision: 0)
+        td.text-right #{'%.2f' % (warrant.percent_need_to_increase.to_f*100)} %
+        td.text-right 
+          - case true
+          - when warrant.percent_expired_profit.to_f >= 0
+            .font-weight-bold.text-primary #{'%.2f' % (warrant.percent_expired_profit.to_f*100)} %
+          - when warrant.percent_expired_profit.to_f >= -0.99
+            | #{'%.2f' % (warrant.percent_expired_profit.to_f*100)} %
+          - else
+            .font-weight-bold.text-danger -100 %
+        td = (warrant.end_date - Date.today).to_i
+        / td = warrant.start_date
+        td = warrant.end_date
+
+javascript:
+  $('table#table').DataTable({
+    "pageLength": 200
+  })

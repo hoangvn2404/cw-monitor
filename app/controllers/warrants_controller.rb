@@ -1,10 +1,26 @@
 class WarrantsController < ApplicationController
-  before_action :set_warrant, only: [:show, :edit, :update, :destroy]
+  before_action :set_warrant, only: [:show, :edit, :update, :destroy, :toggle_watch_list]
+
+  def toggle_watch_list
+    watch_list_cw_ids = current_user.watch_list_cw_ids.include?(@warrant.id) ? current_user.watch_list_cw_ids - [@warrant.id] : current_user.watch_list_cw_ids + [@warrant.id]
+    current_user.update(watch_list_cw_ids: watch_list_cw_ids)
+  end
 
   # GET /warrants
   # GET /warrants.json
   def index
-    @warrants = Warrant.all
+    @search_warrants = Warrant.all
+    @warrants = Warrant.with_issuer(params.dig(:warrant, :issuer))
+                       .with_stock(params.dig(:warrant, :stock))
+                       .includes(:daily_prices)
+  end
+
+  def watch_list
+    @search_warrants = Warrant.within_watchlist("1", current_user&.watch_list_cw_ids)
+    @warrants = Warrant.with_issuer(params.dig(:warrant, :issuer))
+                       .with_stock(params.dig(:warrant, :stock))
+                       .within_watchlist("1", current_user&.watch_list_cw_ids)
+    render :index
   end
 
   # GET /warrants/1
@@ -25,7 +41,6 @@ class WarrantsController < ApplicationController
   # POST /warrants.json
   def create
     @warrant = Warrant.new(warrant_params)
-
     respond_to do |format|
       if @warrant.save
         format.html { redirect_to @warrant, notice: 'Warrant was successfully created.' }
@@ -69,6 +84,6 @@ class WarrantsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def warrant_params
-      params.require(:warrant).permit(:link, :conversion, :basic_price, :stock_price, :stock, :issuer, :code, :start_date, :end_date, :status)
+      params.require(:warrant).permit!
     end
 end

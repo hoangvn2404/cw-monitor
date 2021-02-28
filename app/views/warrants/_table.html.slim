@@ -1,0 +1,135 @@
+ruby:
+  days = DailyPrice.order(date: :desc).pluck(:date).uniq.take(2).reverse
+
+table#table.table.table-hover.table-sm.table-bordered(
+  data-toggle="table"
+  data-sortable="true"
+  data-search="true"
+  data-fixed-columns="true"
+  data-fixed-number=4
+)
+  thead.thead-light
+    tr
+      th data-sortable="true" rowspan=2 #
+      th data-sortable="true" rowspan=2 Is
+      th data-sortable="true" rowspan=2 St
+      th data-sortable="true" rowspan=2 WC
+      th data-sortable="true" rowspan=2 Ratio
+      th.text-center colspan=days.count Warrant Price
+      th data-sortable="true" rowspan=2 X
+      th.text-center colspan=days.count Stock Price
+      th.text-center colspan=days.count Need to increase %
+      th.text-center colspan=days.count Profit %
+      th data-sortable="true" rowspan=2 Remain
+      / th data-sortable="true" rowspan=2 End date
+    tr
+      - days.each_with_index do |day, index|
+        th.text-right data-sortable="true" data-sorter="monthSorter" data-sort-name="_warrant_#{index}_data" data-field="warrant_#{index}"
+          = day.strftime("%d/%m")
+      - days.each_with_index do |day, index|
+        th.text-right data-sortable="true" data-sorter="monthSorter" data-sort-name="_stock_#{index}_data" data-field="stock_#{index}"
+          = day.strftime("%d/%m")
+      - days.each_with_index do |day, index|
+        th.text-right data-sortable="true" data-sorter="monthSorter" data-sort-name="_increase_#{index}_data" data-field="increase_#{index}"
+          = day.strftime("%d/%m")
+      - days.each_with_index do |day, index|
+        th.text-right data-sortable="true" data-sorter="monthSorter" data-sort-name="_profit_#{index}_data" data-field="profit_#{index}"
+          = day.strftime("%d/%m")
+
+  tbody
+    - @warrants.each_with_index do |warrant, index|
+      tr
+        td = index + 1
+        td = warrant.issuer
+        td = warrant.stock
+        td 
+          = link_to warrant.code, warrant.link, target: '_blank'
+          - if current_user.present?
+            .float-right id="warrant_#{warrant.id}"
+              = render 'warrants/toggle', warrant: warrant
+        td.text-right = warrant.conversion
+        / Current Warrant Price
+        - days.each_with_index do |day, index|
+          ruby:
+            prev_price = index > 0 ? warrant.daily_prices.where(date: days[index-1]).first : nil
+            price = warrant.daily_prices.where(date: day).first
+            change = if prev_price.present? && price.present?
+              ((price.current_warrant_price - prev_price.current_warrant_price).to_f/prev_price.current_warrant_price.to_f*100)
+            else
+              nil
+            end
+          td.text-right data-month=change
+            = price.present? ? number_to_currency(price.current_warrant_price, precision: 0) : nil
+            - if change
+              span.ml-1 class="#{ change > 0 ? 'text-primary' : 'text-danger' }"
+                small: strong = "(#{number_to_percentage(change, precision: 1)})"
+        / Basic Stock Price
+        td.text-right = number_to_currency(warrant.basic_stock_price, precision: 0)
+        / Current Stock Price
+        - days.each_with_index do |day, index|
+          ruby:
+            prev_price = index > 0 ? warrant.daily_prices.where(date: days[index-1]).first : nil
+            price = warrant.daily_prices.where(date: day).first
+            change = if prev_price&.current_stock_price.present? && price&.current_stock_price.present?
+              ((price.current_stock_price - prev_price.current_stock_price).to_f/prev_price.current_stock_price.to_f*100)
+            else
+              nil
+            end
+          td.text-right data-month=change
+            = price.present? ? number_to_currency(price.current_stock_price, precision: 0) : nil
+            - if change
+              span.ml-1 class="#{ change > 0 ? 'text-primary' : 'text-danger' }"
+                small: strong = "(#{number_to_percentage(change, precision: 1)})"
+
+        - days.each_with_index do |day, index|
+          - price = warrant.daily_prices.where(date: day).first
+          td.text-right data-month=price&.percent_need_to_increase = price ? "#{'%.2f' % (price.percent_need_to_increase.to_f*100)}" : nil
+        - days.each_with_index do |day, index|
+          - price = warrant.daily_prices.where(date: day).first
+
+          td.text-right data-month=price&.percent_expired_profit
+            - if price
+              - case true
+              - when price.percent_expired_profit.to_f >= 0
+                .font-weight-bold.text-primary #{'%.2f' % (price.percent_expired_profit.to_f*100)}
+              - when price.percent_expired_profit.to_f >= -0.99
+                | #{'%.2f' % (price.percent_expired_profit.to_f*100)}
+              - else
+                .font-weight-bold.text-danger -100
+        td.text-right = (warrant.end_date - Date.today).to_i
+
+scss:
+  .th-inner.sortable.both {
+    background-image: none!important;
+    color: black!important;
+    position: relative;
+    &:after {
+      content: '\21C5';
+      position: absolute;
+      height: 0;
+      width: 0;
+      right: 20px;
+      top: 6px;
+      color: lightgrey;
+      font-size: 15px;
+    }
+    &.asc:after {
+      content: '\2191';
+      color: black;
+      top: 0px;
+      font-size: 20px;
+    }
+    &.desc:after {
+      content: '\2193';
+      color: black;
+      top: 0px;
+      font-size: 20px;
+    } 
+  }
+
+javascript:
+  function monthSorter(a, b) {
+    if (a.month < b.month) return -1;
+    if (a.month > b.month) return 1;
+    return 0;
+  }

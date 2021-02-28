@@ -1,0 +1,5 @@
+= link_to toggle_watch_list_warrant_path(warrant), remote: true do
+  - if current_user.watch_list_cw_ids.include? warrant.id
+    i.fas.fa-star
+  - else
+    i.far.fa-star
