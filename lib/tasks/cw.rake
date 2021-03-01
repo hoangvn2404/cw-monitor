@@ -47,7 +47,7 @@ def parse_from_vndirect
   end
 
   if chrome_driver = ENV["CHROME_DRIVER_REAL"]
-    Selenium::WebDriver::Chrome.driver_path = chrome_driver
+    Selenium::WebDriver::Chrome::Service.driver_path = chrome_driver
   end
 
 
