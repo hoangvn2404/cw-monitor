@@ -26,6 +26,7 @@ table#table.table.table-hover.table-sm.table-bordered(
   tbody
     - @warrants.each_with_index do |warrant, index|
       - price = warrant.daily_prices.where(date: today).first
+      - next if price.blank?
       tr
         td = index + 1
         td = warrant.issuer

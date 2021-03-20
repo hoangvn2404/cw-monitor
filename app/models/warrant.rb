@@ -42,6 +42,8 @@ class Warrant < ApplicationRecord
   end
 
   def update_price
+    today = Date.today
+    return if today.saturday? || today.sunday?
     require 'open-uri'
     html = open link
     doc = Nokogiri::HTML html  
@@ -56,7 +58,7 @@ class Warrant < ApplicationRecord
            start_date: start_date,
            basic_stock_price: basic_stock_price)
 
-    today_price = self.daily_prices.find_or_create_by(date: Date.today)
+    today_price = self.daily_prices.find_or_create_by(date: today)
     today_price.current_warrant_price = current_warrant_price
     today_price.current_stock_price = current_stock_price
     today_price.save
