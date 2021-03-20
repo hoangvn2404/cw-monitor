@@ -13,11 +13,7 @@ Turbolinks.start()
 ActiveStorage.start()
 
 const scriptPerPage = () => {
-   monthSorter= (a, b) => {
-    if (a.month < b.month) return -1;
-    if (a.month > b.month) return 1;
-    return 0;
-  }  
+  window.customSorter = (a, b) => a.sort < b.sort ? -1 : 1
   $('#table').bootstrapTable()
 }
 

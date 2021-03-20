@@ -16,11 +16,11 @@ table#table.table.table-hover.table-sm.table-bordered(
       th data-sortable="true" Stock
       th data-sortable="true" Warrant
       th data-sortable="true" Ratio
-      th.text-center data-sortable="true" data-sorter="monthSorter" data-sort-name="_warrant_data" data-field="warrant" Warrant Price
+      th.text-center data-sortable="true" data-sorter="customSorter" data-sort-name="_warrant_data" data-field="warrant" Warrant Price
       th Strike Price
-      th.text-center data-sortable="true" data-sorter="monthSorter" data-sort-name="_stock_data" data-field="stock" Stock Price
-      th.text-center data-sortable="true" data-sorter="monthSorter" data-sort-name="_increase_data" data-field="increase" To Break Even %
-      th.text-center data-sortable="true" data-sorter="monthSorter" data-sort-name="_profit_data" data-field="profit" Profit %
+      th.text-center data-sortable="true" data-sorter="customSorter" data-sort-name="_stock_data" data-field="stock" Stock Price
+      th.text-center data-sortable="true" data-sorter="customSorter" data-sort-name="_increase_data" data-field="increase" To Break Even %
+      th.text-center data-sortable="true" data-sorter="customSorter" data-sort-name="_profit_data" data-field="profit" Profit %
       th data-sortable="true" Remain
 
   tbody
@@ -37,22 +37,22 @@ table#table.table.table-hover.table-sm.table-bordered(
               = render 'warrants/toggle', warrant: warrant
         td.text-right = warrant.conversion
         / Current Warrant Price
-        td.text-right data-month=price.change_in_warrant
+        td.text-right data-sort=price&.change_in_warrant
           = price.present? ? number_with_delimiter(price.current_warrant_price, precision: 0) : nil
-          - if price.change_in_warrant
+          - if price&.change_in_warrant
             span.ml-1 class="#{ price.change_in_warrant > 0 ? 'text-primary' : 'text-danger' }"
               small: strong = "(#{number_to_percentage(price.change_in_warrant, precision: 1)})"
         / Basic Stock Price
         td.text-right = number_with_delimiter(warrant.basic_stock_price, precision: 0)
         / Current Stock Price
-        td.text-right data-month=price.change_in_stock
+        td.text-right data-sort=price&.change_in_stock
           = price.present? ? number_with_delimiter(price.current_stock_price, precision: 0) : nil
-          - if price.change_in_stock
+          - if price&.change_in_stock
             span.ml-1 class="#{ price.change_in_stock > 0 ? 'text-primary' : 'text-danger' }"
               small: strong = "(#{number_to_percentage(price.change_in_stock, precision: 1)})"
 
-        td.text-right data-month=price&.percent_need_to_increase = price ? "#{'%.2f' % (price.percent_need_to_increase.to_f*100)}" : nil
-        td.text-right data-month=price&.percent_expired_profit
+        td.text-right data-sort=price&.percent_need_to_increase = price.present? ? "#{'%.2f' % (price.percent_need_to_increase.to_f*100)}" : nil
+        td.text-right data-sort=price&.percent_expired_profit
           - if price
             - case true
             - when price.percent_expired_profit.to_f >= 0
@@ -92,9 +92,3 @@ scss:
     } 
   }
 
-javascript:
-  function monthSorter(a, b) {
-    if (a.month < b.month) return -1;
-    if (a.month > b.month) return 1;
-    return 0;
-  }
