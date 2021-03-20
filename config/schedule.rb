@@ -22,6 +22,6 @@
 set :environment, "development"
 set :output, {:error => "log/cron_error_log.log", :standard => "log/cron_log.log"}
 
-every 1.minute do
-  rake "cw:update_price"
+every 5.minute do
+  command "cd /Users/hoangnguyen/Web/cw-monitor && heroku run rake cw:update_price"
 end

@@ -51,21 +51,17 @@ namespace :cw do
 end
 
 def parse_from_vndirect
-
   today = Date.today
   return if today.saturday? || today.sunday?
-
+  yesterday = today.wday == 1 ? today - 3.days : today - 1.day
   require 'webdrivers'
   require 'watir'
-
   if chrome_bin = ENV["GOOGLE_CHROME_REAL"]
     Selenium::WebDriver::Chrome.path = chrome_bin
   end
-
   if chrome_driver = ENV["CHROME_DRIVER_REAL"]
     Selenium::WebDriver::Chrome::Service.driver_path = chrome_driver
   end
-
 
   link = "https://trade.vndirect.com.vn/chung-khoan/chung-quyen"
   browser = Watir::Browser.new :chrome, headless: true
@@ -88,6 +84,9 @@ def parse_from_vndirect
     cw.current_stock_price = current_stock_price.to_f * 1000
     cw.save!
     today_price = cw.daily_prices.find_or_create_by(date: today)
+    yesterday_price = cw.daily_prices.find_by_date(yesterday)    
+    today_price.yesterday_stock_price = yesterday_price&.current_stock_price
+    today_price.yesterday_warrant_price = yesterday_price&.current_warrant_price
     today_price.current_warrant_price = current_warrant_price.present? ? current_warrant_price.to_f * 1000 : tc.to_f * 1000
     today_price.current_stock_price = current_stock_price.to_f * 1000
     today_price.save
