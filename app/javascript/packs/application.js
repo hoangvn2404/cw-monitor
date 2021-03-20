@@ -11,3 +11,15 @@ import "channels"
 Rails.start()
 Turbolinks.start()
 ActiveStorage.start()
+
+const scriptPerPage = () => {
+   monthSorter= (a, b) => {
+    if (a.month < b.month) return -1;
+    if (a.month > b.month) return 1;
+    return 0;
+  }  
+  $('#table').bootstrapTable()
+}
+
+document.addEventListener('turbolinks:load', () => scriptPerPage())
+

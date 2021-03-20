@@ -1,17 +1,17 @@
 nav.navbar.navbar-expand-lg.navbar-light.bg-light.mb-3
   button.navbar-toggler aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label=("Toggle navigation") data-target="#navbarTogglerDemo03" data-toggle="collapse" type="button" 
     span.navbar-toggler-icon
-  a.navbar-brand href="#"  CW
+  a.navbar-brand href="#" CW
   #navbarTogglerDemo03.collapse.navbar-collapse
     ul.navbar-nav.mr-auto.mt-2.mt-lg-0
-      li.nav-item.active
+      li.nav-item class="#{'active' if action_name == 'index'}"
         a.nav-link href=warrants_path
           | All
           span.sr-only (current)
       - if current_user.present?
-        li.nav-item
+        li.nav-item class="#{'active' if action_name == 'watch_list'}"
           a.nav-link href=watch_list_warrants_path Watch-listed
-      - if current_user.present?
+      / - if current_user.present?
         li.nav-item
           a.nav-link href="#" My Portfolio
     .text-left

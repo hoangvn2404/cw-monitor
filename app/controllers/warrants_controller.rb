@@ -12,7 +12,6 @@ class WarrantsController < ApplicationController
     @search_warrants = Warrant.all
     @warrants = Warrant.with_issuer(params.dig(:warrant, :issuer))
                        .with_stock(params.dig(:warrant, :stock))
-                       .includes(:daily_prices)
   end
 
   def watch_list

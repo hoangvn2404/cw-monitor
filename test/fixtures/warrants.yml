@@ -10,15 +10,16 @@
 #  status                   :string
 #  start_date               :date
 #  end_date                 :date
-#  conversion               :integer
-#  current_warrent_price    :integer
+#  conversion               :float
+#  current_warrant_price    :integer
 #  basic_stock_price        :integer
 #  current_stock_price      :integer
-#  percent_need_to_increase :integer
-#  percent_expired_profile  :integer
-#  percent_premium          :integer
+#  percent_need_to_increase :float
+#  percent_expired_profit   :float
+#  percent_premium          :float
 #  created_at               :datetime         not null
 #  updated_at               :datetime         not null
+#  tham_chieu               :integer
 #
 
 one:

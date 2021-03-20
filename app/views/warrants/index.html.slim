@@ -1,13 +1,14 @@
 = simple_form_for :warrant, url: request.path, method: :get, remote: true do |f|
   .row
     .col-2
-      = f.input :issuer, collection: @search_warrants.pluck(:issuer).uniq, label: false, input_html: {onChange: 'submit(this)'}, selected: params.dig(:warrant, :issuer), include_blank: true, prompt: 'Issuer'
+      = f.input :issuer, collection: @search_warrants.pluck(:issuer).uniq.sort, label: false, input_html: {onChange: 'submit(this)'}, selected: params.dig(:warrant, :issuer), include_blank: true, prompt: 'Issuer'
     .col-2
-      = f.input :stock, collection: @search_warrants.pluck(:stock).uniq, label: false, input_html: {onChange: 'submit(this)'}, selected: params.dig(:warrant, :stock), include_blank: true, prompt: 'Stock'
+      = f.input :stock, collection: @search_warrants.pluck(:stock).uniq.sort, label: false, input_html: {onChange: 'submit(this)'}, selected: params.dig(:warrant, :stock), include_blank: true, prompt: 'Stock'
     button#form-submit.d-none
 
 #warrant_table
   = render 'table'
+  / = render 'old_table_2'
 
 br
 
