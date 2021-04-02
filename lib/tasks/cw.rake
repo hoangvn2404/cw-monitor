@@ -66,7 +66,7 @@ def parse_from_vndirect
   link = "https://trade.vndirect.com.vn/chung-khoan/chung-quyen"
   browser = Watir::Browser.new :chrome, headless: true
   browser.goto(link)
-  browser.element(css: "#CEIB2001").wait_until(&:present?)
+  browser.element(css: "#CVPB2015").wait_until(&:present?)
 
   content = browser.element(css: "#banggia-chungquyen-body")
   data = Nokogiri::HTML(content.inner_html)
