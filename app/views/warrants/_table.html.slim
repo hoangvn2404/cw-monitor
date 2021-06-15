@@ -4,17 +4,12 @@ ruby:
   setting = Setting.first || Setting.create
 
 
-.btn-group aria-label=("Basic example") role="group" 
+p.text-muted:small Updated: #{time_ago_in_words(setting.last_run_date, include_seconds: true)} ago
+
+/ .btn-group aria-label=("Basic example") role="group" 
   button.btn.btn-link.btn-sm disabled=true Updated: #{time_ago_in_words(setting.last_run_date, include_seconds: true)} ago
   = button_to refresh_warrants_path, method: :post, remote: true, data: { disable_with: "<i class='fa fa-spinner fa-spin'></i>" }, class: "btn btn-sm border-0" do
     i.fa.fa-sync
-
-/ p.d-inline-block Updated: #{time_ago_in_words(setting.last_run_date)} ago
-
-/ = link_to refresh_warrants_path, remote: true, method: :post, data: {disable_with: "Loading..."}, class: "d-inline-block ml-2"
-  i.fa.fa-sync
-
-
 
 table#table.table.table-hover.table-sm.table-bordered(
   data-toggle="table"
@@ -58,7 +53,7 @@ table#table.table.table-hover.table-sm.table-bordered(
         td.text-right data-sort=price&.change_in_warrant
           = price.present? ? number_with_delimiter(price.current_warrant_price, precision: 0) : nil
           - if price&.change_in_warrant
-            span.ml-1 class="#{ price.change_in_warrant > 0 ? 'text-violet' : 'text-danger' }"
+            span.ml-1 class="#{ price.change_in_warrant > 0 ? 'text-violet' : 'text-red' }"
               small: strong = "(#{number_to_percentage(price.change_in_warrant, precision: 1)})"
         / Basic Stock Price
         td.text-right = number_with_delimiter(warrant.basic_stock_price, precision: 0)
@@ -66,7 +61,7 @@ table#table.table.table-hover.table-sm.table-bordered(
         td.text-right data-sort=price&.change_in_stock
           = price.present? ? number_with_delimiter(price.current_stock_price, precision: 0) : nil
           - if price&.change_in_stock
-            span.ml-1 class="#{ price.change_in_stock > 0 ? 'text-violet' : 'text-danger' }"
+            span.ml-1 class="#{ price.change_in_stock > 0 ? 'text-violet' : 'text-red' }"
               small: strong = "(#{number_to_percentage(price.change_in_stock, precision: 1)})"
         / td.text-right data-sort=price&.gearing_ratio = price.present? ? "#{'%.1f' % (price.gearing_ratio.to_f)}" : nil
         td.text-right data-sort=price&.percent_need_to_increase = price.present? ? "#{'%.2f' % (price.percent_need_to_increase.to_f*100)}" : nil
@@ -78,12 +73,16 @@ table#table.table.table-hover.table-sm.table-bordered(
             - when price.percent_expired_profit.to_f >= -0.99
               | #{'%.2f' % (price.percent_expired_profit.to_f*100)}
             - else
-              .font-weight-bold.text-danger -100
+              .font-weight-bold.text-red -100
         td.text-right = (warrant.end_date - Date.today).to_i
 
 scss:
   .text-violet {
     color: #E833F5;
+  }
+
+  .text-red {
+    color: #D72F29;
   }
   .th-inner.sortable.both {
     background-image: none!important;
