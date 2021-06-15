@@ -53,10 +53,8 @@ class Warrant < ApplicationRecord
     end_date = doc.xpath("//td//b[text()='Ngày giao dịch cuối cùng']//ancestor-or-self::tr//td[2]").text.split(" : ")[0].to_date
     basic_stock_price = self.basic_stock_price || doc.xpath("//td//b[text()='Giá thực hiện']//ancestor-or-self::tr//td[2]").text.split(" : ")[0].gsub(",", "").to_i
     issuer = doc.xpath("//td//b[text()='Tổ chức phát hành CW']//ancestor-or-self::tr//td[2]").text.split("(")[1].gsub(")", "")
-    update(current_warrant_price: current_warrant_price, 
-           current_stock_price: current_stock_price,
-           start_date: start_date,
-           basic_stock_price: basic_stock_price)
+    issued_price = doc.xpath("//td//b[text()='Giá phát hành']//ancestor-or-self::tr//td[2]").text.split(" : ")[0].gsub(",", "").to_i  
+    update_columns(current_warrant_price: current_warrant_price, current_stock_price: current_stock_price, start_date: start_date, basic_stock_price: basic_stock_price,issued_price: issued_price)
 
     today_price = self.daily_prices.find_or_create_by(date: today)
     today_price.current_warrant_price = current_warrant_price

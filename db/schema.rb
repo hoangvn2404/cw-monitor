@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_20_064535) do
+ActiveRecord::Schema.define(version: 2021_06_15_144142) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -30,6 +30,7 @@ ActiveRecord::Schema.define(version: 2021_03_20_064535) do
     t.integer "yesterday_warrant_price"
     t.float "change_in_warrant"
     t.float "change_in_stock"
+    t.float "gearing_ratio"
     t.index ["warrant_id"], name: "index_daily_prices_on_warrant_id"
   end
 
@@ -64,6 +65,7 @@ ActiveRecord::Schema.define(version: 2021_03_20_064535) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "tham_chieu"
+    t.integer "issued_price"
   end
 
 end

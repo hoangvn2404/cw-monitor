@@ -33,10 +33,16 @@ class DailyPrice < ApplicationRecord
     change_in_stock = ys.present? ? (s-ys)/ys.to_f*100 : nil
     change_in_warrant = yw.present? ? (w-yw)/yw.to_f*100 : nil
 
-    # binding.pry if self.warrant.code == "CSTB2007" && date == Date.parse("Fri, 26 Feb 2021")
-    self.update(percent_need_to_increase: percent_need_to_increase, 
-                percent_expired_profit: percent_expired_profit, 
-                change_in_stock: change_in_stock, 
-                change_in_warrant: change_in_warrant)
+    gearing_ratio = if percent_need_to_increase && percent_expired_profit
+      (percent_expired_profit / percent_need_to_increase).abs
+    else
+      nil
+    end
+    
+    update_columns(percent_need_to_increase: percent_need_to_increase, 
+                  percent_expired_profit: percent_expired_profit, 
+                  change_in_stock: change_in_stock, 
+                  change_in_warrant: change_in_warrant,
+                  gearing_ratio: gearing_ratio)
   end
 end
