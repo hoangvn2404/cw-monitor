@@ -9,6 +9,7 @@ Rails.application.routes.draw do
     end
     collection do
       get :watch_list
+      post :refresh
     end
   end
   root to: "warrants#index"

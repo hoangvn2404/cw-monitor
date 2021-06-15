@@ -75,6 +75,11 @@ class WarrantsController < ApplicationController
     end
   end
 
+  def refresh
+    Setting.parse_from_vndirect
+    redirect_to warrants_path
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_warrant

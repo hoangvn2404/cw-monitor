@@ -1,0 +1,7 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  last_run_date: 2021-06-15 23:44:28
+
+two:
+  last_run_date: 2021-06-15 23:44:28

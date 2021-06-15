@@ -1,6 +1,20 @@
 ruby:
   #days = DailyPrice.order(date: :desc).pluck(:date).uniq.take(1)
   today = DailyPrice.order(date: :desc).pluck(:date).uniq.take(1)[0]
+  setting = Setting.first || Setting.create
+
+
+.btn-group aria-label=("Basic example") role="group" 
+  button.btn.btn-link.btn-sm disabled=true Updated: #{time_ago_in_words(setting.last_run_date, include_seconds: true)} ago
+  = button_to refresh_warrants_path, method: :post, remote: true, data: { disable_with: "<i class='fa fa-spinner fa-spin'></i>" }, class: "btn btn-sm border-0" do
+    i.fa.fa-sync
+
+/ p.d-inline-block Updated: #{time_ago_in_words(setting.last_run_date)} ago
+
+/ = link_to refresh_warrants_path, remote: true, method: :post, data: {disable_with: "Loading..."}, class: "d-inline-block ml-2"
+  i.fa.fa-sync
+
+
 
 table#table.table.table-hover.table-sm.table-bordered(
   data-toggle="table"
