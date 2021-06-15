@@ -76,7 +76,10 @@ class WarrantsController < ApplicationController
   end
 
   def refresh
-    Setting.parse_from_vndirect
+    # Setting.parse_from_vndirect
+    Warrant.all.each(&:update_price)
+    setting = Setting.first || Setting.create
+    setting.update(last_run_date: Time.now)
     redirect_to warrants_path
   end
 
