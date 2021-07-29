@@ -15,7 +15,7 @@ class Setting < ApplicationRecord
     link = "https://trade.vndirect.com.vn/chung-khoan/chung-quyen"
     browser = Watir::Browser.new :chrome, headless: true
     browser.goto(link)
-    browser.element(css: "#CVPB2015").wait_until(&:present?)
+    browser.element(css: "#CMWG2104").wait_until(&:present?)
 
     content = browser.element(css: "#banggia-chungquyen-body")
     data = Nokogiri::HTML(content.inner_html)
