@@ -3,7 +3,6 @@ ruby:
   today = DailyPrice.order(date: :desc).pluck(:date).uniq.take(1)[0]
   setting = Setting.first || Setting.create
 
-
 p.text-muted:small Updated: #{time_ago_in_words(setting.last_run_date, include_seconds: true)} ago
 
 / .btn-group aria-label=("Basic example") role="group" 

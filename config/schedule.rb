@@ -27,5 +27,5 @@ set :output, {:error => "log/cron_error_log.log", :standard => "log/cron_log.log
 # end
 
 every '0,5,10,15,20,25,30,35,40,45,50,55 9-14 * * 1-5' do
-  command "cd /Users/hoangnguyen/Web/cw-monitor && heroku run rake cw:update_price"
+  command "cd /Users/hoangnguyen/Web/cw-monitor && /opt/homebrew/bin/heroku run rake cw:update_price"
 end
