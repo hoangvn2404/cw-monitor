@@ -32,12 +32,12 @@ namespace :cw do
   end
 
   task update_price: :environment do
-    # parse_from_vndirect      
-    # progressbar = ProgressBar.create(format: '%a |%b>>%i| %p%% %t', total: Warrant.count)
-    # Warrant.all.each do |w|
-    #   UpdatePriceJob.perform_later w.id
-    #   progressbar.increment
-    # end  
+    # begin
+    #   Setting.parse_from_ssi
+    # rescue StandardError => e
+    # end
+
+
     begin
       Setting.parse_from_ssi
     rescue Exception => e
@@ -45,7 +45,7 @@ namespace :cw do
       Warrant.all.each do |w|
         UpdatePriceJob.perform_later w.id
         progressbar.increment
-      end  
+      end
     end
   end
 end

@@ -28,6 +28,7 @@ class DailyPrice < ApplicationRecord
     s = current_stock_price
     ys = yesterday_stock_price
     return if s.blank?
+
     percent_need_to_increase = (r*w+x)/s-1
     percent_expired_profit = (s-x)/(r*w)-1
     change_in_stock = ys.present? ? (s-ys)/ys.to_f*100 : nil

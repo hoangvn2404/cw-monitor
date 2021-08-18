@@ -65,7 +65,7 @@ class Setting < ApplicationRecord
     content = browser.element(css: "#table-body-scroll")
     data = Nokogiri::HTML(content.inner_html)
     data.css('tr').each do |cw_data|
-      code, issuer, end_date, top, bottom, tc, long3, long3_vol, long2, long2_vol, long1, long1_vol, current_warrant_price, volumn, variance, short1, short1_vol, short2, short2_vol, short3, short3_vol, max, min, total_volumn, stock, current_stock_price, basic_stock_price, conversion = cw_data.css('td').map(&:text)
+      code, issuer, end_date, top, bottom, tc, long3, long3_vol, long2, long2_vol, long1, long1_vol, current_warrant_price, volumn, variance, short1, short1_vol, short2, short2_vol, short3, short3_vol, max, min, total_volumn, stock, current_stock_price, ignore_1, ignore_2, basic_stock_price, conversion = cw_data.css('td').map(&:text)
       cw = Warrant.find_or_create_by(code: code)
       cw.stock ||= code[1..3]
       cw.issuer ||= issuer
