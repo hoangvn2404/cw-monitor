@@ -39,7 +39,7 @@ namespace :cw do
     #   progressbar.increment
     # end  
     begin
-      Setting.parse_from_vndirect      
+      Setting.parse_from_ssi
     rescue Exception => e
       progressbar = ProgressBar.create(format: '%a |%b>>%i| %p%% %t', total: Warrant.count)
       Warrant.all.each do |w|
