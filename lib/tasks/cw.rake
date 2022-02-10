@@ -37,16 +37,24 @@ namespace :cw do
     # rescue StandardError => e
     # end
 
-
-    begin
-      Setting.parse_from_ssi
-    rescue Exception => e
-      progressbar = ProgressBar.create(format: '%a |%b>>%i| %p%% %t', total: Warrant.count)
-      Warrant.all.each do |w|
-        UpdatePriceJob.perform_later w.id
-        progressbar.increment
-      end
+    if DailyPrice.count > 8000
+      DailyPrice.order(id: :asc).take(4000).each(&:destroy)
     end
+
+    Setting.parse_from_ssi
+
+    Warrant.where(issued_price: nil).each(&:update_price)
+
+
+    # begin
+    #   Setting.parse_from_ssi
+    # rescue Exception => e
+    #   progressbar = ProgressBar.create(format: '%a |%b>>%i| %p%% %t', total: Warrant.count)
+    #   Warrant.all.each do |w|
+    #     UpdatePriceJob.perform_later w.id
+    #     progressbar.increment
+    #   end
+    # end
   end
 end
 
