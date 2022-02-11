@@ -61,7 +61,7 @@ class Setting < ApplicationRecord
     link = "https://iboard.ssi.com.vn/bang-gia/chung-quyen"
     browser = Watir::Browser.new :chrome, headless: true
     browser.goto(link)
-    browser.element(css: "#CMWG2104").wait_until(&:present?)
+    browser.element(css: "#CHPG2201").wait_until(&:present?)
     content = browser.element(css: "#table-body-scroll")
     data = Nokogiri::HTML(content.inner_html)
     data.css('tr').each do |cw_data|
