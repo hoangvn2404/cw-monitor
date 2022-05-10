@@ -45,7 +45,7 @@ class Warrant < ApplicationRecord
     today = Date.today
     return if today.saturday? || today.sunday?
     require 'open-uri'
-    html = open link
+    html = URI.open link
     doc = Nokogiri::HTML html  
     current_warrant_price = doc.css('#stockprice').text.gsub(",", "").gsub(" ", "")
     current_stock_price = doc.css('#basestock').text.gsub(",", "").gsub(" ", "")

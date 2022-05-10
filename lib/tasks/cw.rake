@@ -41,8 +41,8 @@ namespace :cw do
       DailyPrice.order(id: :asc).take(4000).each(&:destroy)
     end
 
-    Setting.parse_from_ssi
-
+    Setting.parse_from_vndirect
+    # Setting.parse_from_ssi
     Warrant.where(issued_price: nil).each(&:update_price)
 
 

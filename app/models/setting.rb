@@ -1,10 +1,12 @@
+require 'webdrivers'
+require 'watir'
+
 class Setting < ApplicationRecord
   def self.parse_from_vndirect
     today = Date.today
     return if today.saturday? || today.sunday?
     yesterday = today.wday == 1 ? today - 3.days : today - 1.day
-    require 'webdrivers'
-    require 'watir'
+
     if chrome_bin = ENV["GOOGLE_CHROME_REAL"]
       Selenium::WebDriver::Chrome.path = chrome_bin
     end
@@ -15,13 +17,13 @@ class Setting < ApplicationRecord
     link = "https://trade.vndirect.com.vn/chung-khoan/chung-quyen"
     browser = Watir::Browser.new :chrome, headless: true
     browser.goto(link)
-    browser.element(css: "#CMWG2104").wait_until(&:present?)
+    browser.element(css: "#CHPG2201").wait_until(&:present?)
     content = browser.element(css: "#banggia-chungquyen-body")
     data = Nokogiri::HTML(content.inner_html)
     data.css('tr').each do |cw_data|
-      code, issuer, end_date, tc, top, bottom, long3, long3_vol, long2, long2_vol, long1, long1_vol, current_warrant_price, volumn, variance, short1, short1_vol, short2, short2_vol, short3, short3_vol, max, min, total_volumn, stock, current_stock_price, ignore_1, ignore_2, basic_stock_price, conversion = cw_data.css('td').map(&:text)
+      code, issuer, end_date, tc, top, bottom, total_volumn, long3, long3_vol, long2, long2_vol, long1, long1_vol, current_warrant_price, volumn, variance, short1, short1_vol, short2, short2_vol, short3, short3_vol, ignore_1, current_stock_price, basic_stock_price, conversion, break_even_price = cw_data.css('td').map(&:text)
       cw = Warrant.find_or_create_by(code: code)
-      cw.stock = stock
+      cw.stock = code[1..3]
       cw.issuer = issuer
       cw.link ||= "https://finance.vietstock.vn/chung-khoan-phai-sinh/#{code}/cw-tong-quan.htm"
       cw.end_date ||= Date.strptime(end_date, "%d/%m/%y")  
@@ -49,8 +51,7 @@ class Setting < ApplicationRecord
     today = Date.today
     return if today.saturday? || today.sunday?
     yesterday = today.wday == 1 ? today - 3.days : today - 1.day
-    require 'webdrivers'
-    require 'watir'
+
     if chrome_bin = ENV["GOOGLE_CHROME_REAL"]
       Selenium::WebDriver::Chrome.path = chrome_bin
     end
